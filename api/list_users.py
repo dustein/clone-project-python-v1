@@ -29,9 +29,9 @@ def lambda_handler(event, context):
       data = table.scan(ExclusiveStartKey=data['LastEvaluatedKey'])  
       res_data.extend(data['Items'])
 
-  response = response_builder(200, res_data)  
-  
-  return response
+    response = response_builder(200, res_data)  
+    
+    return response
 
 def response_builder(statusCode, body=None):
   res_data = {
