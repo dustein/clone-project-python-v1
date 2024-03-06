@@ -7,19 +7,23 @@ dynamodbTableName = 'clone-jobs'
 dynamodb = boto3.resource('dynamodb')
 table = dynamodb.Table(dynamodbTableName)
 
+dynamoIndexName = 'equipe-accept-index'
+index = dynamodb.Table(dynamoIndexName)
+
 def lambda_handler(event, context):
 
   if event['queryStringParameters']:
 
-    job_creator = event['queryStringParameters']['PK']
+    equipe = event['queryStringParameters']['GS1-PK']
+    # open_jobs = event['queryStringParameters']['GS1-SK']
 
-    response = table.query(
-      KeyConditionExpression = Key ('PK').eq(job_creator)
+    response = index.query(
+      KeyConditionExpression = Key ('GS1-PK').eq(equipe)
       )
 
     if response:
       return response_builder(200, response)
-    return response_builder(404, {"message":"Found NO Jobs created by this User %" % job_creator})
+    return response_builder(404, {"message":"mensagem"})
   
   else:
     return response_builder(404, {"message":"Must inform parameters"})
