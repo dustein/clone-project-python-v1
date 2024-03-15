@@ -23,10 +23,10 @@ def lambda_handler(event, context):
 
     if response:
       return response_builder(200, response)
-    return response_builder(404, {"message":"mensagem"})
+    return response_builder(404, {"message":"Equipe %" % equipe})
   
   else:
-    return response_builder(404, {"message":"Must inform parameters"})
+    return response_builder(404, {"message":"Informe os Parâmetros necessários para a busca."})
 
 
 
