@@ -7,18 +7,15 @@ dynamodbTableName = 'clone-jobs'
 dynamodb = boto3.resource('dynamodb')
 table = dynamodb.Table(dynamodbTableName)
 
-dynamoIndexName = 'equipe-accept-index'
-index = dynamodb.Table(dynamoIndexName)
-
 def lambda_handler(event, context):
 
   if event['queryStringParameters']:
 
-    equipe = event['queryStringParameters']['GS1-PK']
-    # open_jobs = event['queryStringParameters']['GS1-SK']
+    equipe = event['queryStringParameters']['GSI1-PK']
 
-    response = index.query(
-      KeyConditionExpression = Key ('GS1-PK').eq(equipe)
+    response = table.query(
+      IndexName = 'equipe-accept-index',
+      KeyConditionExpression = Key ('GSI1-PK').eq(equipe) & Key ('GSI1-SK').begins_with('USER_ACCEPTED#')
       )
 
     if response:
