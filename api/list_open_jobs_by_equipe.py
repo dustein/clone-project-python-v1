@@ -1,7 +1,7 @@
 import json
 import boto3
 from boto3.dynamodb.conditions import Key
-from custom_encoder import CustomEncoder
+from api.custom_encoder import CustomEncoder
 
 dynamodbTableName = 'clone-jobs'
 dynamodb = boto3.resource('dynamodb')

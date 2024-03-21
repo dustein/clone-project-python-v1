@@ -11,18 +11,26 @@ def lambda_handler(event, context):
 
   if event['queryStringParameters']:
 
-    job_creator = event['queryStringParameters']['PK']
+    all_jobs = []
 
-    response = table.query(
-      KeyConditionExpression = Key ('PK').eq(job_creator)
+    for num in range (1,5):
+      equipe = f'EQUIPE#{num}'
+      
+      equipe_job = table.query(
+      IndexName = 'equipe-accept-index',
+      KeyConditionExpression = Key (equipe).eq(equipe) & Key ('GSI1-SK').begins_with('USER_ACCEPTED#')
       )
 
+      all_jobs.append(equipe_job)
+
+    response = all_jobs
+    
     if response:
       return response_builder(200, response)
-    return response_builder(404, {"message":"Found NO Jobs created by this User %" % job_creator})
+    return response_builder(404, {"message":"Equipe %" % equipe})
   
   else:
-    return response_builder(404, {"message":"Must inform parameters"})
+    return response_builder(404, {"message":"Informe os Parâmetros necessários para a busca."})
 
 
 
