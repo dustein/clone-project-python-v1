@@ -13,10 +13,10 @@ def lambda_handler(event, context):
 
   for num in range (1,5):
     equipe = f'EQUIPE#{num}'
-    
+     
     equipe_job = table.query(
       IndexName = 'equipe-accept-index',
-      KeyConditionExpression = Key ('GSI1-PK').eq(equipe) & Key ('GSI1-SK').eq('USER_ACCEPTED#none')
+      KeyConditionExpression = Key ('GSI1-PK').eq(equipe) & Key ('GSI1-SK').begins_with('USER_ACCEPTED#')
       )
 
     if equipe_job['Count'] > 0:
