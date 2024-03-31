@@ -1,7 +1,6 @@
 import json
 import boto3
-from boto3.dynamodb.conditions import Key
-from custom_encoder import CustomEncoder
+# from boto3.dynamodb.conditions import Key
 
 dynamodbTableName = 'clone-jobs'
 dynamodb = boto3.resource('dynamodb')
@@ -9,41 +8,33 @@ table = dynamodb.Table(dynamodbTableName)
 
 def lambda_handler(event, context):
 
-  if event['queryStringParameters']:
+  user_create = 'JOB_CREATED#user_um'
+  job_id = 'JOB#1'
+  job_date = '2024-03-21'
+  team = 'EQUIPE#4'
+  accepted = 'USER_ACCEPTED#none'
+  setor = 'SAP'
+  turno = 'FULL'
 
-    user_create = 'JOB_CREATED#user_um'
-    job_id = 'JOB#1'
-    job_date = '2024-03-21'
-    team = 'EQUIPE#4'
-    accepted = 'USER_ACCEPTED#none'
-    setor = 'SAP'
-    turno = 'FULL'
+  table.put_item(
+    Item = {
+      'PK': user_create,
+      'SK': job_id,
+      'Data': job_date,
+      'GSI1-PK': team,
+      'GSI1-SK': accepted,
+      'Setor': setor,
+      'Turno': turno
+    }
+  )
 
-    equipe = event['queryStringParameters']['GSI1-PK']
-
-    response = table.query(
-      IndexName = 'equipe-accept-index',
-      KeyConditionExpression = Key ('GSI1-PK').eq(equipe) & Key ('GSI1-SK').begins_with('USER_ACCEPTED#')
-      )
-
-    if response:
-      return response_builder(200, response)
-    return response_builder(404, {"message":"Equipe %" % equipe})
-  
-  else:
-    return response_builder(404, {"message":"Informe os Parâmetros necessários para a busca."})
-
-
-
-def response_builder(statusCode, body=None):
-  res_data = {
-    'statusCode' : statusCode,
+  response = {
+    'statusCode' : 201,
     'headers': {
       'Content-Type':'application/json',
       'Acess-Control-Allow-Origin': '*'
-    }
+    },
+    'body': {'message': 'Job gravado'}
   }
-  if body:
-    res_data['body'] = json.dumps(body, cls=CustomEncoder)
-
-  return res_data
+  
+  return response
