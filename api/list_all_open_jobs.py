@@ -19,17 +19,8 @@ def lambda_handler(event, context):
       IndexName = 'equipe-accept-index',
       KeyConditionExpression = Key ('GSI1-PK').eq(equipe) & Key ('GSI1-SK').eq('USER_ACCEPTED#none')
       )
-# !! Criar regra para caso seja informado a equipe do operador, não exibir os jobs da mesma
-    
-# !! Criar regra para exibir somente full/day/nigth/todos
-# !! Criar regra para exibir jobs de uma equipe específica apenas
-#se for indicado uma equipe
-    match equipe_job:
-      case equipe_job['Count'] > 0:
-        
 
     if event['queryStringParameters']['GSI1-PK']:
-      #nao incluir se for a mesma equipe do usuario
       if event['queryStringParameters'] != equipe:
         if equipe_job['Count'] > 0:
           response.append(equipe_job['Items'])
